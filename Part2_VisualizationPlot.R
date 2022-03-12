@@ -89,16 +89,19 @@ spdf <- joinCountryData2Map(All_counts_Countrywisw, joinCode="NAME", nameJoinCol
 colourPalette <- c( 'red'
                    ,'darkgreen')
                    
-mapCountryData(spdf, 
+mapParams <-mapCountryData(spdf, 
                nameColumnToPlot="sentiment"
                ,catMethod="diverging"
                ,mapTitle ="Countrywise Sentiment Analysis"
                ,numCats = length(table(All_counts_Countrywisw$sentiment))
                ,colourPalette=colourPalette
+               , addLegend='False' 
                
                )
 
 
+#add a modified legend using the same initial parameters as mapCountryData               
+do.call( addMapLegendBoxes, c(mapParams,title = "Sentiment",bg = "bold", bty = "n",x='bottom',horiz=TRUE))
 
 
 #2.8 Word Clustering - taken only more than 0.65 corelated values
