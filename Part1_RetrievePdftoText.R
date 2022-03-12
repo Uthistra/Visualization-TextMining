@@ -17,28 +17,28 @@ rds_data <- readRDS(filename)
 ##################################### Define the Sector and One drive path in the Local Pc
 
 SECTOR <- "Telecommunications"
-ONE_DRIVE_PDF_PATH <- "C:/Users/Uthistra/OneDrive/New/OneDrive/Telecommunications"
+DRIVE_PDF_PATH <- "C:/Users/Uthistra/OneDrive/New/OneDrive/Telecommunications"
 
 ##################################### retrieve 'Telecommunications' data and omit NA values 
 
-sector_data <- rds_data[rds_data$Sector == SECTOR & !is.na(rds_data$`Report Pdf Address`),]
-sector_data
+sectorlydata <- rds_data[rds_data$Sector == SECTOR & !is.na(rds_data$`Report Pdf Address`),]
+sectorlydata
 
 ################# create directory to save the pdf retrieved in the Local Machine
 
 dir.create("files")
 setwd("./files")
 
-################# Retrieve all the files in the ONE_DRIVE_PDF_PATH
-file_list <- list.files(ONE_DRIVE_PDF_PATH)
+################# Retrieve all the files in the DRIVE_PDF_PATH
+file_list <- list.files(DRIVE_PDF_PATH)
 file_list
 
-################# Read all the data saved to the 'sector_data' dataframe
-for (row in 1:nrow(sector_data)) {
+################# Read all the data saved to the 'sectorlydata' dataframe
+for (row in 1:nrow(sectorlydata)) {
  
   #Read and save each files company , year and filename into variables
-  company <- sector_data[row, "Name"]
-  year <- sector_data[row, "Publication Year"]
+  company <- sectorlydata[row, "Name"]
+  year <- sectorlydata[row, "Publication Year"]
   filename <- paste(stri_replace_all_fixed(company, " ", ""), "_", year, ".pdf", sep = "")
 
 
@@ -47,13 +47,13 @@ for (row in 1:nrow(sector_data)) {
     print(paste("Processing...", filename))
     
 ############# If file exist copy the relvant file synced from one drive to the Local Drive
-    file.copy(paste(ONE_DRIVE_PDF_PATH, filename, sep = "/"), ".")
+    file.copy(paste(DRIVE_PDF_PATH, filename, sep = "/"), ".")
     
 ############ Read the Pdf text in each pdf and save it into the "TextForAnalyze" vector
     tryCatch({
       text <- pdf_text(filename)
       data <- toString(text)
-      sector_data[row, "TextForAnalyze"] <- data
+      sectorlydata[row, "TextForAnalyze"] <- data
 
     
 
@@ -66,14 +66,14 @@ for (row in 1:nrow(sector_data)) {
   }
 }
 
-########################## Finally save the 'sector_data' dataframe to finalDataset.RDS file for the plotting
+########################## Finally save the 'sectorlydata' dataframe to finalDataset.RDS file for the plotting
 
-saveRDS(sector_data, file = "finalDataset.RDS") 
+saveRDS(sectorlydata, file = "finalDataset.RDS") 
 ########################## Reset the current working Directory
 
 # setwd("E:/DalarnaUni/Data Visualization/Home Assignment") 
 # getwd() # get the Current Working Directory path
-# write.csv(sector_data, "TelecommunicationSubset.csv") - To Write to Csv
+# write.csv(sectorlydata, "TelecommunicationSubset.csv") - To Write to Csv
 
 
 
